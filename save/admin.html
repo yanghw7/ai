@@ -76,7 +76,7 @@ input[type=checkbox]{width:auto;accent-color:var(--accent);transform:scale(1.25)
     <div class="note">여기서 저장한 설정을 GitHub에 올리고, 일반 페이지에서는 <b>갱신</b> 버튼을 눌렀을 때 반영합니다.</div>
   </div>
   <div class="back">
-    <a href="https://yanghw7.github.io/study/all" class="back-btn">통합 AI검색 복귀</a>
+    <a href="https://yanghw7.github.io/ai" class="back-btn">통합 AI검색 복귀</a>
   </div>
 </div>
 
@@ -85,7 +85,7 @@ input[type=checkbox]{width:auto;accent-color:var(--accent);transform:scale(1.25)
   <form onsubmit="return false" autocomplete="off"><input type="password" id="tok" placeholder="github_pat_..." autocomplete="off"></form>
   <div class="note">
     github.com/settings/personal-access-tokens/new →
-    <b>Only select repositories</b> → <b>study</b> 체크 →
+    <b>Only select repositories</b> → <b>ai</b> 체크 →
     <b>Permissions → Contents: Read and write</b> → Generate
   </div>
   <div class="row" style="margin-top:10px">
@@ -168,7 +168,7 @@ input[type=checkbox]{width:auto;accent-color:var(--accent);transform:scale(1.25)
 <script src="../all/api-core.js"></script>
 <script>
 (function(){
-  var API = 'https://api.github.com/repos/yanghw7/study/contents/save/settings.json';
+  var API = 'https://api.github.com/repos/yanghw7/ai/contents/save/settings.json';
   var GH = 'aimode_admin_gh_v1';
   var $ = function(id){ return document.getElementById(id); };
   var state = {token:'', sha:null, data:null, dirty:false, cropEdit:false, savedCrop:null, editing:null, open:{}, q:''};
@@ -338,8 +338,8 @@ input[type=checkbox]{width:auto;accent-color:var(--accent);transform:scale(1.25)
           }
           status('⚠ GitHub 보안 차단(409): GitHub가 저장 내용에서 비밀정보를 탐지했습니다.' + extra, 'bad');
         }
-        else if(r.status === 403) status('⚠ 저장 실패: 권한 부족 또는 요청 제한 (403). study 저장소 Contents: Read and write 확인.', 'bad');
-        else if(r.status === 404) status('⚠ 저장 실패: study 저장소 또는 settings.json 경로를 찾지 못했습니다 (404).', 'bad');
+        else if(r.status === 403) status('⚠ 저장 실패: 권한 부족 또는 요청 제한 (403). ai 저장소 Contents: Read and write 확인.', 'bad');
+        else if(r.status === 404) status('⚠ 저장 실패: ai 저장소 또는 settings.json 경로를 찾지 못했습니다 (404).', 'bad');
         else status('⚠ 저장 실패 (' + r.status + '): ' + detail.slice(0,180), 'bad');
         return;
       }

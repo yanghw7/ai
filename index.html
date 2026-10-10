@@ -330,7 +330,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 
     <div class="spacer"></div>
 
-    <a href="https://yanghw7.github.io/study/save/admin.html" class="acc admin-link">
+    <a href="https://yanghw7.github.io/ai/save/admin.html" class="acc admin-link">
       <span class="ico">🛠️</span>
       <span class="ttl">관리자 페이지<span class="sub">모든 기기에 설정 반영</span></span>
     </a>
@@ -375,7 +375,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   // API 칸은 웹뷰가 아니라 이 화면 안에서 직접 그리므로 앱/브라우저 모두 똑같이 동작합니다.
   var NATIVE = !!window.AiaiNative;
   var loaded = {g: false, n: false};
-  var SITE_SETTINGS = /\.github\.io$/i.test(location.hostname) ? new URL("/study/save/settings.json", location.origin).href : "https://yanghw7.github.io/study/save/settings.json";
+  var SITE_SETTINGS = /\.github\.io$/i.test(location.hostname) ? new URL("/ai/save/settings.json", location.origin).href : "https://yanghw7.github.io/ai/save/settings.json";
   var MAX_PROMPT = 5000;
   var UIKEY = "uni_ui_v1", LKEY = "uni_layout_v1", ETAG_KEY = "uni_etag_v1";
   var mq = window.matchMedia("(max-width:720px)");
@@ -758,7 +758,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   var REPO = (function(){
     var owner = "yanghw7";
     if(/\.github\.io$/i.test(location.hostname)) owner = location.hostname.split(".")[0];
-    return {owner: owner, repo: "study", path: "save/settings.json"}; // 설정은 study 저장소 save/ 에 있음
+    return {owner: owner, repo: "ai", path: "save/settings.json"}; // 설정은 ai 저장소 save/ 에 있음
   })();
   function b64dec(b64){
     var bin = atob(b64.replace(/\s/g, "")), bytes = new Uint8Array(bin.length);
@@ -1167,7 +1167,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
     }
     new MutationObserver(function(){ reportLayout(); }).observe(document.body, {attributes: true, attributeFilter: ["class"]});
     window.addEventListener("resize", reportLayout);
-    var al = document.querySelector(".admin-link"); if(al) al.setAttribute("href", "../save/admin.html");
+    var al = document.querySelector(".admin-link"); if(al) al.setAttribute("href", "./save/admin.html");
   }
 
   /* ---------- 시작 ---------- */
