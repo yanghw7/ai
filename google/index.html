@@ -422,11 +422,11 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
     // GitHub Pages
     if(/\.github\.io$/i.test(host)){
       var owner = host.split(".")[0];
-      return {owner: owner, repo: host, path: "ai/save/settings.json"};
+      return {owner: owner, repo: "ai", path: "save/settings.json"};
     }
     // 로컬 개발 (localhost / 127.0.0.1 / file://)
     if(host === "localhost" || host === "127.0.0.1" || location.protocol === "file:"){
-      return {owner: "yanghw7", repo: "yanghw7.github.io", path: "ai/save/settings.json"};
+      return {owner: "yanghw7", repo: "ai", path: "save/settings.json"};
     }
     return null;
   })();

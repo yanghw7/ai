@@ -758,7 +758,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   var REPO = (function(){
     var owner = "yanghw7";
     if(/\.github\.io$/i.test(location.hostname)) owner = location.hostname.split(".")[0];
-    return {owner: owner, repo: owner + ".github.io", path: "ai/save/settings.json"}; // 설정은 yanghw7.github.io 저장소의 ai/save/ 에 있음
+    return {owner: owner, repo: "ai", path: "save/settings.json"}; // 설정은 ai 저장소(주소 /ai/)의 save/ 에 있음
   })();
   function b64dec(b64){
     var bin = atob(b64.replace(/\s/g, "")), bytes = new Uint8Array(bin.length);
