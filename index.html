@@ -119,22 +119,23 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 
 
-/* 폰(좁은 화면): 보기 버튼을 2줄로 — 1줄 구글·API·네이버 전용 / 2줄 좌우·상하 분할·순서 바꾸기 */
+/* 폰(좁은 화면): 보기 버튼을 2줄로 — 1줄 구글·API·네이버 전용 + 보낸 내용·경고 / 2줄 좌우·상하 분할 · G/N 좌우·상하 · 전환 */
 .brk{display:none}
 @media (max-width:720px){
+  .tools{gap:5px}
   .seg{display:contents}
-  .brk{display:block;flex:0 0 100%;height:0;margin:-8px 0 0}
-  .seg button,#swapBtn{padding:6px 10px}
-  /* 보낸 내용 = 1줄 오른쪽 / 경고 = 2줄 오른쪽 (버튼들을 한 줄에 같이 놓고 order 로 자리 지정) */
+  .brk{display:block;flex:0 0 100%;height:0;margin:-5px 0 0}
+  .seg button,#swapBtn{padding:6px 7px;font-size:12px}
   .tools .tright{display:contents}   /* (아래쪽 .tright 규칙보다 우선하도록 .tools 를 붙임) */
   .seg button{order:1}
   #sentBtn{order:2}
-  .brk{order:3}
-  .seg button[data-l="side"],.seg button[data-l="split"]{order:4}
-  #swapBtn{order:5}
-  #warnBtn{order:6}
-  /* 남는 자리에서만 늘어나고(내용 크기까지), 자리가 모자라면 말줄임 → 줄이 넘어가지 않음 */
-  #sentBtn,#warnBtn{flex:1 1 0;min-width:0;max-width:max-content;margin-left:auto;padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #warnBtn{order:3}
+  .brk{order:4}
+  .seg button[data-l="side"],.seg button[data-l="split"],.seg button[data-l="gnside"],.seg button[data-l="gnsplit"]{order:5}
+  #swapBtn{order:6}
+  /* 보낸 내용 = 1줄 오른쪽(남는 자리에서 말줄임), 경고 = 그 오른쪽 (줄이 넘어가지 않게 함) */
+  #sentBtn{flex:1 1 0;min-width:0;max-width:max-content;margin-left:auto;padding:6px 8px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #warnBtn{flex:0 0 auto;padding:6px 8px;font-size:12px;white-space:nowrap}
 }
 #panes{flex:1;min-height:0;position:relative;display:grid;grid-template-rows:1fr;grid-template-columns:1fr;gap:8px}
 .pane{display:flex;flex-direction:column;min-height:0;min-width:0}
@@ -156,9 +157,14 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .newtab.alt{right:130px;background:var(--accent);border-color:var(--accent);color:#fff}
 .layout-split #panes{grid-template-rows:1fr 1fr}
 .layout-side #panes{grid-template-columns:1fr 1fr}
-/* 분할 순서 바꾸기: 구글 ↔ API 위치 교체 (상하: 위/아래, 좌우: 왼쪽/오른쪽) */
+/* 구글 + 네이버 분할: API 칸은 숨기고 네이버 칸을 구글 옆(좌우) / 아래(상하)에 */
+.layout-gnside #paneA,.layout-gnsplit #paneA{display:none}
+.layout-gnside #paneN,.layout-gnsplit #paneN{display:flex}
+.layout-gnside #panes{grid-template-columns:1fr 1fr}
+.layout-gnsplit #panes{grid-template-rows:1fr 1fr}
+/* 분할 전환: 구글 ↔ 다른 칸(API 또는 네이버) 위치 교체 (상하: 위/아래, 좌우: 왼쪽/오른쪽) */
 .swap #paneG{order:2}
-.swap #paneA{order:1}
+.swap #paneA,.swap #paneN{order:1}
 #swapBtn{padding:6px 14px;font-size:13px;color:var(--fg);background:var(--card);border:1px solid var(--border)}
 #swapBtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .layout-google #swapBtn,.layout-api #swapBtn,.layout-naver #swapBtn{display:none}
@@ -213,7 +219,9 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .apisum{font-size:13px;line-height:1.7}
 .apisum .off{color:var(--muted)}
 .apisum>div{display:flex;align-items:center;gap:8px}
-.apisum .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.apisum .t{flex:1;min-width:0;overflow-wrap:anywhere;display:flex;align-items:flex-start;gap:8px;cursor:pointer}
+.apisum .t input{flex:none;width:18px;height:18px;margin:4px 0 0;accent-color:var(--accent)}
+.apisum .unused{color:var(--muted);opacity:.7}
 .apisum .mv{flex:none;display:flex;gap:4px}
 .apisum .mv button{padding:2px 10px;font-size:12px;line-height:1.6;color:var(--muted);background:var(--card);border:1px solid var(--border)}
 .apisum .mv button:disabled{opacity:.35;cursor:default}
@@ -316,7 +324,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
       </button>
       <div class="acc-body"><div class="acc-inner"><div class="acc-pad">
         <div class="apisum" id="apiSum"></div>
-        <div class="note">사용할 API와 키는 관리자 페이지에서 정해요. 키도 관리자에서 저장하면 GitHub 설정에 함께 올라가서, 다른 기기에서는 <b>갱신</b>을 누르면 받아와요.</div>
+        <div class="note">왼쪽 체크로 이 기기에서 API를 잠시 빼거나 다시 넣을 수 있고, ▲▼로 순서도 바꿔요. 다른 기기에도 똑같이 쓰려면 관리자 페이지에서 정하고 [API 선택 저장]을 누르세요. 키도 관리자에서 저장하면 GitHub 설정에 함께 올라가서, 다른 기기에서는 <b>갱신</b>을 누르면 받아와요.</div>
       </div></div></div>
     </div>
 
@@ -341,8 +349,10 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
         <i class="brk" aria-hidden="true"></i>
         <button type="button" data-l="side">좌우 분할</button>
         <button type="button" data-l="split">상하 분할</button>
+        <button type="button" data-l="gnside" title="구글 AI + 네이버 AI 좌우 분할">G/N 좌우</button>
+        <button type="button" data-l="gnsplit" title="구글 AI + 네이버 AI 상하 분할">G/N 상하</button>
       </div>
-      <button type="button" id="swapBtn" title="구글 AI와 API의 위치를 서로 바꿔요">⇅ 순서 바꾸기</button>
+      <button type="button" id="swapBtn" title="분할 화면에서 두 칸의 위치를 서로 바꿔요">⇅ 전환</button>
       <span class="tright">
         <button type="button" id="sentBtn" hidden>📤 보낸 내용</button>
         <button type="button" id="warnBtn" hidden>⚠ 경고</button>
@@ -556,7 +566,22 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   // APK 앱이 구글 화면을 확인하고 문제를 알릴 때 부르는 함수
   window.__aiaiWarn = function(key, msg){ showWarn(String(key), String(msg)); };
 
+  // 네이버는 공백 포함 약 800자까지만 받아서 그 뒤는 잘림 (직접 확인한 값). 프롬프트는 검색어 뒤에 붙으므로 프롬프트 뒷부분부터 잘림
+  var NAVER_MAX = 800, naverInfo = null;
+  function paintNaverWarn(){
+    var b = document.body.classList;
+    var shown = b.contains("layout-naver") || b.contains("layout-gnside") || b.contains("layout-gnsplit");
+    if(!naverInfo || !shown || naverInfo.total <= NAVER_MAX){ clearWarn("n:"); return; }
+    var i = naverInfo;
+    showWarn("n:len", "[네이버] 보낸 글이 공백 포함 " + i.total.toLocaleString() + "자(검색어 " + i.q.toLocaleString() + "자" + (i.p ? " + 프롬프트 " + i.p.toLocaleString() + "자" : "") + ")라서 " + NAVER_MAX + "자를 넘어요. " +
+      (i.q > NAVER_MAX ? "검색어 자체가 길어서 뒤쪽이 잘려요." : "검색어 뒤에 붙는 프롬프트의 뒷부분이 잘릴 수 있어요. 프롬프트를 줄이거나 [프롬프트 없이 검색]을 쓰세요."));
+  }
   function run(k, text, np){
+    if(k === "n"){
+      var bq = buildQuery(text, "n", np), qn = text.replace(/\s+$/, "").length;
+      naverInfo = {total: bq.length, q: qn, p: Math.max(0, bq.length - qn - 3)};
+      paintNaverWarn();
+    }
     if(k === "a"){ var ap = (np || NOPROMPT) ? null : active("g"); runApi(buildQuery(text, "g", np), text, ap ? ap.text : ""); return; }
     var url = SV[k].url(buildQuery(text, k, np));
     if(k === "g"){
@@ -606,7 +631,8 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
     if(b.contains("layout-google")) return k === "g";
     if(b.contains("layout-api")) return k === "a";
     if(b.contains("layout-naver")) return false;   // 네이버 전용 화면에선 구글·API 는 화면을 바꿀 때 이어서 검색
-    return true;   // 분할 화면은 구글 + API 둘 다
+    if(b.contains("layout-gnside") || b.contains("layout-gnsplit")) return k === "g";   // 구글·네이버 분할은 API 칸이 없음 (네이버는 위에서 항상 true)
+    return true;   // 구글 + API 분할은 둘 다
   }
   function busy(){ $("goBtn").textContent = (timers.g || timers.a || timers.n) ? "대기…" : "검색"; }
   // np = true 면 프롬프트 없이 검색어만 보냄
@@ -882,34 +908,41 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   function apiFill(){ return $("paneA").querySelector(".fill"); }
   function hostOf(u){ try{ return new URL(u).hostname.replace(/^www\./, ""); }catch(e){ return u; } }
 
+  // 이 기기에서 잠시 켜고 끄기: 왼쪽 체크 = 사용 중. 체크를 풀면 검색에서 빠지고, 다시 체크하면 돌아옴 (관리자와 같은 방식)
   function renderApiSum(){
-    var on = apiOn(), box = $("apiSum");
+    var all = AiaiApi.getCfg(), box = $("apiSum"), nOn = 0;
     box.innerHTML = "";
-    if(!on.length){
-      box.appendChild(div("off", "선택된 API가 없어요. 관리자 페이지에서 골라 주세요."));
-      $("subApi").textContent = "없음";
-      return;
-    }
-    on.forEach(function(c, i){
+    all.forEach(function(c, i){
+      if(c.on) nOn++;
       var has = !!AiaiApi.getKey(c.id);
-      var row = div(has ? "" : "off", null), tx = document.createElement("span");
-      tx.className = "t";
-      tx.textContent = (has ? "✓ " : "⚠ ") + AiaiApi.displayName(c) + " · " + c.model + (c.web ? " · 웹검색" : "") + (has ? "" : " · 키 없음");
-      row.appendChild(tx);
-      if(on.length > 1){
-        var mv = document.createElement("span"); mv.className = "mv";
-        [["▲", -1, "위로"], ["▼", 1, "아래로"]].forEach(function(m){
-          var b = document.createElement("button"); b.type = "button"; b.textContent = m[0];
-          b.setAttribute("aria-label", AiaiApi.displayName(c) + " " + m[2] + " 이동");
-          b.disabled = (m[1] < 0 && i === 0) || (m[1] > 0 && i === on.length - 1);
-          b.onclick = function(e){ e.stopPropagation(); if(AiaiApi.move(c.id, m[1], true)) render(); };
-          mv.appendChild(b);
-        });
-        row.appendChild(mv);
-      }
+      var row = div(c.on ? (has ? "" : "off") : "unused", null);
+      var lb = document.createElement("label"); lb.className = "t";
+      var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!c.on;
+      cb.setAttribute("aria-label", AiaiApi.displayName(c) + " 사용");
+      cb.onchange = function(){
+        var list = AiaiApi.getCfg();
+        list.forEach(function(x){ if(x.id === c.id) x.on = cb.checked; });
+        AiaiApi.setCfg(list);
+        render();
+      };
+      lb.appendChild(cb);
+      var tx = document.createElement("span");
+      tx.textContent = (c.on ? (has ? "✓ " : "⚠ ") : "") + AiaiApi.displayName(c) + " · " + c.model + (c.web ? " · 웹검색" : "") + (c.on && !has ? " · 키 없음" : "");
+      lb.appendChild(tx);
+      row.appendChild(lb);
+      var mv = document.createElement("span"); mv.className = "mv";
+      [["▲", -1, "위로"], ["▼", 1, "아래로"]].forEach(function(m){
+        var b = document.createElement("button"); b.type = "button"; b.textContent = m[0];
+        b.setAttribute("aria-label", AiaiApi.displayName(c) + " " + m[2] + " 이동");
+        b.disabled = (m[1] < 0 && i === 0) || (m[1] > 0 && i === all.length - 1);
+        b.onclick = function(e){ e.stopPropagation(); if(AiaiApi.move(c.id, m[1], false)) render(); };
+        mv.appendChild(b);
+      });
+      row.appendChild(mv);
       box.appendChild(row);
     });
-    $("subApi").textContent = on.map(AiaiApi.displayName).join(" · ");
+    var on = all.filter(function(c){ return c.on; });
+    $("subApi").textContent = on.length ? on.map(AiaiApi.displayName).join(" · ") : "없음";
   }
 
   // 관리자에서 API 선택이 바뀌었을 때, 이미 떠 있는 결과의 탭 구성을 맞춰 줌
@@ -1062,13 +1095,14 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
     });
   }
 
-  /* ---------- 보기 방식: 구글 전용 / API 전용 / 상하 분할 / 좌우 분할 ---------- */
-  var MODES = ["google", "api", "naver", "split", "side"];
+  /* ---------- 보기 방식: 구글 전용 / API 전용 / 네이버 전용 / 구글+API 상하·좌우 분할 / 구글+네이버 상하·좌우 분할 ---------- */
+  var MODES = ["google", "api", "naver", "split", "side", "gnside", "gnsplit"];
   function setLayout(l){
     if(MODES.indexOf(l) < 0) l = "split";
     MODES.forEach(function(m){ document.body.classList.toggle("layout-" + m, m === l); });
     Array.prototype.forEach.call($("layoutSeg").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-l") === l); });
     try{ localStorage.setItem(LKEY, l); }catch(e){}
+    paintNaverWarn();
     flushPending();
   }
   Array.prototype.forEach.call($("layoutSeg").querySelectorAll("button"), function(b){
@@ -1078,7 +1112,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   if(savedL === "tab") savedL = "google";          // 예전 저장값 호환
   setLayout(MODES.indexOf(savedL) >= 0 ? savedL : "split");
 
-  /* 분할 순서 바꾸기 (구글 ↔ API) */
+  /* 분할 전환 (구글 ↔ API, 구글+네이버 분할에서는 구글 ↔ 네이버) */
   var SWKEY = "uni_swap_v1";
   function setSwap(on, report){
     document.body.classList.toggle("swap", !!on);
