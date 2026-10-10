@@ -758,7 +758,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   var REPO = (function(){
     var owner = "yanghw7";
     if(/\.github\.io$/i.test(location.hostname)) owner = location.hostname.split(".")[0];
-    return {owner: owner, repo: "ai", path: "save/settings.json"}; // 설정은 ai 저장소 save/ 에 있음
+    return {owner: owner, repo: owner + ".github.io", path: "ai/save/settings.json"}; // 설정은 yanghw7.github.io 저장소의 ai/save/ 에 있음
   })();
   function b64dec(b64){
     var bin = atob(b64.replace(/\s/g, "")), bytes = new Uint8Array(bin.length);
@@ -816,7 +816,7 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
     // 3) 앱 안에 들어 있는 기본 설정 (저장된 프롬프트가 하나도 없을 때만 사용)
     if(NATIVE && !SV.g.st.prompts.length){
       try{
-        var r3 = await fetch(new URL("../save/settings.json", location.href).href);
+        var r3 = await fetch(new URL("./save/settings.json", location.href).href);
         if(r3.ok){ var d3 = await r3.json(); syncMsg = "✓ 앱 기본 설정 사용 " + new Date().toLocaleTimeString(); return d3; }
       }catch(e){}
     }
