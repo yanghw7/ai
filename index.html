@@ -748,28 +748,34 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 
   // PWA를 열면 검색창에 커서를 바로 둡니다.
   // DOM 초기화가 끝난 뒤 실행해 autofocus가 무시되는 환경도 보완합니다.
+  // 검색창 포커스를 앱 시작/복귀 시 반복해서 복구한다.
+  // Win+2 등으로 앱 창을 다시 활성화하면 window focus 이벤트를 이용한다.
+  var focusSearchTimers = [];
   function focusSearchOnLaunch(){
-    try{
-      q.focus({preventScroll:true});
-    }catch(e){
-      try{ q.focus(); }catch(e2){}
-    }
-    // 커서를 입력창 내용의 끝에 둡니다.
-    try{
-      var end = q.value.length;
-      q.setSelectionRange(end, end);
-    }catch(e){}
+    focusSearchTimers.forEach(function(t){ clearTimeout(t); });
+    focusSearchTimers = [];
+    [0, 120, 350, 700].forEach(function(delay){
+      focusSearchTimers.push(setTimeout(function(){
+        if(document.hidden || !q || !q.isConnected) return;
+        // 편집창 등 다른 입력칸을 열어 둔 경우에도 요청대로 검색창으로 복귀
+        try { q.focus({preventScroll:true}); } catch(e) { try { q.focus(); } catch(_){} }
+        try {
+          var end = q.value.length;
+          q.setSelectionRange(end, end);
+        } catch(e){}
+      }, delay));
+    });
   }
   if(document.readyState === "complete"){
-    setTimeout(focusSearchOnLaunch, 0);
-  }else{
+    focusSearchOnLaunch();
+  } else {
     window.addEventListener("load", focusSearchOnLaunch, {once:true});
   }
-  // PWA가 백그라운드에서 다시 활성화될 때도 검색창을 준비합니다.
+  window.addEventListener("focus", focusSearchOnLaunch);
+  window.addEventListener("pageshow", focusSearchOnLaunch);
+
   document.addEventListener("visibilitychange", function(){
-    if(!document.hidden){
-      setTimeout(focusSearchOnLaunch, 50);
-    }
+    if(!document.hidden) focusSearchOnLaunch();
   });
 
   // 검색 후 다시 입력창을 누르면(또는 새로 타이핑하면) 이전 검색어를 자동으로 지워 바로 새 검색어를 칠 수 있게 함
