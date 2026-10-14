@@ -746,6 +746,32 @@ ul.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
   };
   q.addEventListener("input", function(){ autosize(q); });
 
+  // PWA를 열면 검색창에 커서를 바로 둡니다.
+  // DOM 초기화가 끝난 뒤 실행해 autofocus가 무시되는 환경도 보완합니다.
+  function focusSearchOnLaunch(){
+    try{
+      q.focus({preventScroll:true});
+    }catch(e){
+      try{ q.focus(); }catch(e2){}
+    }
+    // 커서를 입력창 내용의 끝에 둡니다.
+    try{
+      var end = q.value.length;
+      q.setSelectionRange(end, end);
+    }catch(e){}
+  }
+  if(document.readyState === "complete"){
+    setTimeout(focusSearchOnLaunch, 0);
+  }else{
+    window.addEventListener("load", focusSearchOnLaunch, {once:true});
+  }
+  // PWA가 백그라운드에서 다시 활성화될 때도 검색창을 준비합니다.
+  document.addEventListener("visibilitychange", function(){
+    if(!document.hidden){
+      setTimeout(focusSearchOnLaunch, 50);
+    }
+  });
+
   // 검색 후 다시 입력창을 누르면(또는 새로 타이핑하면) 이전 검색어를 자동으로 지워 바로 새 검색어를 칠 수 있게 함
   var submitted = false;
   function clearIfSubmitted(){ if(!submitted) return; submitted = false; q.value = ""; autosize(q); }
